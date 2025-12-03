@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collector Dashboard - EcoCollect</title>
+    <link rel="stylesheet" href="app.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-truck"></i>
+          <span>Collector Portal</span>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#dashboard" class="nav-link active">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="#requests" class="nav-link">My Requests</a>
+          </li>
+          <li class="nav-item">
+            <a href="#schedule" class="nav-link">Schedule</a>
+          </li>
+          <li class="nav-item">
+            <a href="#profile" class="nav-link">Profile</a>
+          </li>
+        </ul>
+        <div class="hamburger">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+    </nav>
+
+    <section id="loginSection" class="section">
+      <div class="container">
+        <div class="login-container">
+          <h2><i class="fas fa-sign-in-alt"></i> Collector Login</h2>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="collectorId"><i class="fas fa-id-card"></i> Collector ID</label>
+              <input type="text" id="collectorId" placeholder="Enter your Collector ID" required />
+            </div>
+            <div class="form-group">
+              <label for="password"><i class="fas fa-lock"></i> Password</label>
+              <input type="password" id="password" placeholder="Enter your password" required />
+            </div>
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+          </form>
+          <div id="loginMessage" class="message"></div>
+          
+          <div id="collectorCredentials" class="demo-credentials" style="display:none;">
+            <h4>Demo Credentials:</h4>
+            <p><strong>ID:</strong> C001, C002, C003, C004, C005</p>
+            <p><strong>Password:</strong> password123</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboardSection" class="section" style="display:none;">
+      <div class="container">
+        <div class="dashboard-header">
+          <h2><i class="fas fa-tachometer-alt"></i> Collector Dashboard</h2>
+          <div class="collector-info">
+            <span id="collectorName">Welcome, Collector</span>
+            <button onclick="logout()" class="btn-secondary">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="totalAssigned">0</h3>
+              <p>Total Assigned</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="pendingTasks">0</h3>
+              <p>Pending Tasks</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="completedToday">0</h3>
+              <p>Completed Today</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="rating">4.8</h3>
+              <p>Rating</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+          <div class="action-buttons">
+            <button onclick="startRoute()" class="btn-primary">
+              <i class="fas fa-route"></i> Start Route
+            </button>
+            <button onclick="reportIssue()" class="btn-secondary">
+              <i class="fas fa-exclamation-triangle"></i> Report Issue
+            </button>
+            <button onclick="updateLocation()" class="btn-secondary">
+              <i class="fas fa-map-marker-alt"></i> Update Location
+            </button>
+          </div>
+        </div>
+
+        <div class="assigned-requests">
+          <h3><i class="fas fa-list"></i> Your Assigned Requests</h3>
+          <div id="assignedRequestsGrid" class="requests-grid"></div>
+        </div>
+
+        <div class="schedule-section">
+          <h3><i class="fas fa-calendar-alt"></i> Today's Schedule</h3>
+          <div id="todaySchedule" class="schedule-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="requestModal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Request Details</h3>
+          <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body" id="modalBody">
+        </div>
+        <div class="modal-footer">
+          <button onclick="updateRequestStatus('In Progress')" class="btn-primary">
+            <i class="fas fa-play"></i> Start Collection
+          </button>
+          <button onclick="updateRequestStatus('Completed')" class="btn-secondary">
+            <i class="fas fa-check"></i> Mark Complete
+          </button>
+          <button onclick="closeModal()" class="btn-secondary">
+            <i class="fas fa-times"></i> Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer" style="margin-top: 20px;">
+      <div class="container">
+        <div class="footer-bottom" style="text-align: center; padding: 20px;">
+          <p>&copy; 2024 NSNR. All rights reserved. | 
+            <a href="#" id="hintLink" onclick="toggleHint('collector'); return false;" style="color: #4CAF50; text-decoration: none; cursor: pointer;">Hint</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script src="collector.js"></script>
+    <script>
+      function toggleHint(type) {
+        const credentialsDiv = document.getElementById(type === 'admin' ? 'adminCredentials' : 'collectorCredentials');
+        const hintLink = document.getElementById('hintLink');
+        
+        if (credentialsDiv.style.display === 'none') {
+          credentialsDiv.style.display = 'block';
+          hintLink.textContent = 'Hide Hint';
+        } else {
+          credentialsDiv.style.display = 'none';
+          hintLink.textContent = 'Hint';
+        }
+      }
+    </script>
+  </body>
+</html>
